@@ -20,47 +20,33 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+SETUP_SECRET=
 ```
 
-`SUPABASE_SERVICE_ROLE_KEY` blijft alleen server-side. Zet deze nooit in clientcode.
+`SUPABASE_SERVICE_ROLE_KEY` blijft alleen server-side. Zet deze nooit in clientcode. `SETUP_SECRET` is optioneel maar aanbevolen voor de eerste installatie.
 
 ## Supabase setup
 
 1. Maak een Supabase project.
 2. Open de SQL Editor.
 3. Voer `supabase/migrations/001_initial_schema.sql` uit.
-4. Maak een medewerker aan in Supabase Auth.
-5. Voeg daarna in SQL een employee-record toe:
+4. Zet de environment variables in Vercel, inclusief een tijdelijke `SETUP_SECRET`.
+5. Open na deployment `/setup` en maak de eerste admin aan.
 
-```sql
-insert into employees (auth_user_id, name, email, role)
-values ('AUTH_USER_ID_HIER', 'Manager', 'manager@example.com', 'admin');
-```
+De setup-pagina werkt alleen zolang de tabel `employees` nog leeg is. Daarna voeg je medewerkers toe via **Medewerkers** in de app.
 
 Rollen zijn `reception`, `manager` en `admin`.
 
 ## Medewerkersaccount aanmaken
 
-Een medewerker krijgt een account via Supabase Auth plus een record in de tabel `employees`.
+De eerste admin maak je via `/setup`. Daarna kan een manager/admin medewerkers aanmaken in de app via **Medewerkers**.
 
-1. Ga in Supabase naar **Authentication → Users**.
-2. Klik **Add user** of **Invite user**.
-3. Vul het e-mailadres en een tijdelijk wachtwoord in.
-4. Kopieer de `User UID` van deze Auth-user.
-5. Ga naar **SQL Editor** en voer dit uit:
+1. Log in als admin.
+2. Ga naar **Medewerkers**.
+3. Vul naam, e-mail, tijdelijk wachtwoord en rol in.
+4. Klik **Medewerker aanmaken**.
 
-```sql
-insert into employees (auth_user_id, name, email, role, active)
-values (
-  'AUTH_USER_ID_HIER',
-  'Naam medewerker',
-  'medewerker@example.com',
-  'reception',
-  true
-);
-```
-
-Gebruik als rol `reception`, `manager` of `admin`. Daarna kan de medewerker inloggen via `/login` met het Supabase Auth e-mailadres en wachtwoord.
+De app maakt automatisch een Supabase Auth-user en een `employees` record aan.
 
 ## Workflows
 
