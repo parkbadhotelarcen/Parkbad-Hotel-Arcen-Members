@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { Gift, Plus, Trash2 } from "lucide-react";
 import { requireEmployee } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/server";
 import { addVisit, deleteGuest, endParticipation, getReferenceData, issueReward, resendInvitation, updateGuest } from "@/lib/actions";
-import { activationUrl, guestUrl } from "@/lib/urls";
+import { activationUrl, getPublicBaseUrl, guestUrl } from "@/lib/urls";
 import { fullName, nextReward, toDateLabel } from "@/lib/loyalty";
 import { QrCard } from "@/components/qr-card";
 import { Progress, Shell, StatusLabel } from "@/components/ui";
@@ -23,8 +24,9 @@ export default async function GuestDetailPage({ params, searchParams }: { params
   if (!guest) return <Shell employee={employee}><div className="card p-6">Gast niet gevonden.</div></Shell>;
   const activeReward = query.reward ? refs.rewards.find((reward) => reward.id === query.reward) : null;
   const next = nextReward(refs.rewards, guest.total_visits);
-  const guestPage = guestUrl(guest.public_token);
-  const invite = activationUrl(guest.activation_token);
+  const baseUrl = getPublicBaseUrl(await headers());
+  const guestPage = guestUrl(guest.public_token, baseUrl);
+  const invite = activationUrl(guest.activation_token, baseUrl);
   return (
     <Shell employee={employee}>
       <div className="grid gap-6 xl:grid-cols-[1fr_340px]">
