@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, BarChart3, Gift, Home, LogOut, QrCode, Search, Settings, Trash2, UserCheck, Users } from "lucide-react";
+import { Award, BarChart3, Gift, Home, LogOut, QrCode, Search, Settings, Trash2, UserCheck, UserCog, Users } from "lucide-react";
 import { signOut } from "@/lib/actions";
 import { Brand } from "@/components/brand";
 import type { Employee, Guest, Level, Reward } from "@/lib/types";
@@ -15,6 +15,7 @@ const nav = [
   ["/activations", UserCheck, "Activaties"],
   ["/trash", Trash2, "Prullenbak"],
   ["/settings", Settings, "Instellingen"],
+  ["/employees", UserCog, "Medewerkers"],
   ["/logs", Search, "Logs"],
 ] as const;
 
