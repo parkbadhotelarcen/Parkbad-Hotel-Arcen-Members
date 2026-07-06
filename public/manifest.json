@@ -1,0 +1,17 @@
+{
+  "name": "Parkbad Hotel Arcen Members",
+  "short_name": "Parkbad Members",
+  "description": "Digitaal loyaliteitssysteem voor hotelgasten.",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#fbf8ef",
+  "theme_color": "#005651",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
