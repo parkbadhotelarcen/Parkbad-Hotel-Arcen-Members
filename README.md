@@ -39,6 +39,29 @@ values ('AUTH_USER_ID_HIER', 'Manager', 'manager@example.com', 'admin');
 
 Rollen zijn `reception`, `manager` en `admin`.
 
+## Medewerkersaccount aanmaken
+
+Een medewerker krijgt een account via Supabase Auth plus een record in de tabel `employees`.
+
+1. Ga in Supabase naar **Authentication → Users**.
+2. Klik **Add user** of **Invite user**.
+3. Vul het e-mailadres en een tijdelijk wachtwoord in.
+4. Kopieer de `User UID` van deze Auth-user.
+5. Ga naar **SQL Editor** en voer dit uit:
+
+```sql
+insert into employees (auth_user_id, name, email, role, active)
+values (
+  'AUTH_USER_ID_HIER',
+  'Naam medewerker',
+  'medewerker@example.com',
+  'reception',
+  true
+);
+```
+
+Gebruik als rol `reception`, `manager` of `admin`. Daarna kan de medewerker inloggen via `/login` met het Supabase Auth e-mailadres en wachtwoord.
+
 ## Workflows
 
 - Receptie logt in via `/login`.
