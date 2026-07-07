@@ -32,6 +32,8 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
 
   const baseUrl = getPublicBaseUrl(await headers());
   const progressUrl = guestUrl(guest.public_token, baseUrl);
+  const appleWalletUrl = `/api/wallet/apple/${guest.public_token}`;
+  const googleWalletUrl = `/api/wallet/google/${guest.public_token}`;
   const refs = await getReferenceData();
 
   return (
@@ -70,12 +72,12 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
               De Wallet-knoppen staan klaar voor de officiele Apple Wallet en Google Wallet koppeling. Tot die koppeling actief is, kan deze pagina direct vanuit de mail worden geopend.
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <button className="btn-secondary w-full cursor-not-allowed opacity-65" disabled>
-                <CreditCard className="h-4 w-4" /> Apple Wallet volgt
-              </button>
-              <button className="btn-secondary w-full cursor-not-allowed opacity-65" disabled>
-                <Smartphone className="h-4 w-4" /> Google Wallet volgt
-              </button>
+              <Link href={appleWalletUrl} className="btn-secondary w-full">
+                <CreditCard className="h-4 w-4" /> Apple Wallet
+              </Link>
+              <Link href={googleWalletUrl} className="btn-secondary w-full">
+                <Smartphone className="h-4 w-4" /> Google Wallet
+              </Link>
             </div>
           </section>
         </section>
