@@ -7,14 +7,15 @@
 }
 
 body {
-  background: #fbf8ef;
+  background: #fbfaf5;
   color: #103331;
+  text-rendering: geometricPrecision;
 }
 
 input,
 textarea,
 select {
-  @apply w-full rounded-lg border border-landal-100 bg-white px-4 py-3 text-sm outline-none transition focus:border-landal-600 focus:ring-2 focus:ring-landal-100;
+  @apply w-full rounded-lg border border-landal-100 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-landal-500 focus:ring-2 focus:ring-landal-100;
 }
 
 label {
@@ -22,13 +23,17 @@ label {
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-landal-700 px-4 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-landal-800 disabled:opacity-50;
+  @apply inline-flex items-center justify-center gap-2 rounded-lg bg-landal-600 px-5 py-3 text-sm font-bold text-white shadow-soft transition hover:bg-landal-700 disabled:opacity-50;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-landal-100 bg-white px-4 py-3 text-sm font-bold text-landal-800 transition hover:bg-landal-50;
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-landal-100 bg-white px-5 py-3 text-sm font-bold text-landal-800 transition hover:border-landal-200 hover:bg-landal-50;
 }
 
 .card {
-  @apply rounded-lg border border-landal-100 bg-white shadow-soft;
+  @apply rounded-lg border border-landal-100/80 bg-white shadow-card;
+}
+
+.wellness-surface {
+  @apply bg-[radial-gradient(circle_at_top_left,rgba(210,241,239,0.55),transparent_34%),linear-gradient(180deg,#fbfaf5_0%,#f4fbfa_100%)];
 }
