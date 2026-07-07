@@ -4,7 +4,7 @@ export function Brand({ compact = false }: { compact?: boolean }) {
   return (
     <div className="flex items-center gap-3">
       <Image
-        src="/landal-logo.png"
+        src="/landal-logo.svg"
         alt="Landal Holiday breaks in nature"
         width={238}
         height={98}
