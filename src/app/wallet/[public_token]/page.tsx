@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { CreditCard, Smartphone } from "lucide-react";
+import { CreditCard, QrCode, ScanLine, Smartphone } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { QrCard } from "@/components/qr-card";
 import { createAdminClient } from "@/lib/supabase/server";
@@ -19,7 +19,7 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
 
   if (!guest) {
     return (
-      <main className="grid min-h-screen place-items-center bg-cream p-4">
+      <main className="wellness-surface grid min-h-screen place-items-center p-4">
         <div className="card max-w-md p-6">
           Deze ledenkaart is niet actief. Neem contact op met de receptie.
         </div>
@@ -31,41 +31,70 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
   const progressUrl = guestUrl(guest.public_token, baseUrl);
 
   return (
-    <main className="min-h-screen bg-cream px-4 py-6">
-      <div className="mx-auto max-w-xl space-y-5">
-        <section className="card overflow-hidden">
-          <div className="bg-landal-800 p-6 text-white">
-            <Brand compact />
-            <p className="mt-8 text-sm font-bold uppercase tracking-wide text-gold">Parkbad Hotel Arcen Members</p>
-            <h1 className="mt-2 text-3xl font-black">Digitale ledenkaart</h1>
-            <p className="mt-1 text-white/80">{fullName(guest.first_name, guest.last_name)}</p>
+    <main className="wellness-surface min-h-screen px-4 py-6 sm:py-10">
+      <div className="mx-auto grid max-w-5xl items-start gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+        <section className="space-y-6">
+          <div className="card p-6 sm:p-8">
+            <Brand />
+            <p className="mt-10 text-xs font-black uppercase tracking-wide text-landal-600">Landal Vaste Gasten Club</p>
+            <h1 className="mt-3 text-4xl font-black leading-tight text-landal-900 sm:text-5xl">Uw digitale ledenkaart</h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
+              Open deze kaart bij aankomst. De receptie scant de QR-code, registreert uw verblijf en uw voortgang wordt automatisch bijgewerkt.
+            </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
+              <div className="rounded-lg border border-landal-100 bg-mist p-4">
+                <QrCode className="h-5 w-5 text-landal-600" />
+                <div className="mt-3 text-sm font-black text-landal-900">Kaart openen</div>
+                <div className="mt-1 text-xs text-slate-600">Vanuit Wallet of deze mail.</div>
+              </div>
+              <div className="rounded-lg border border-landal-100 bg-mist p-4">
+                <ScanLine className="h-5 w-5 text-landal-600" />
+                <div className="mt-3 text-sm font-black text-landal-900">QR scannen</div>
+                <div className="mt-1 text-xs text-slate-600">Alleen door de receptie.</div>
+              </div>
+              <div className="rounded-lg border border-landal-100 bg-mist p-4">
+                <CreditCard className="h-5 w-5 text-landal-600" />
+                <div className="mt-3 text-sm font-black text-landal-900">Voortgang bijwerken</div>
+                <div className="mt-1 text-xs text-slate-600">Automatisch na registratie.</div>
+              </div>
+            </div>
           </div>
-          <div className="p-5">
-            <QrCard url={progressUrl} label="Scan of tik voor uw voortgang" guestNumber={guest.guest_number} showUrl={false} />
-            <Link href={progressUrl} className="btn-primary mt-5 w-full">
-              Voortgang bekijken
-            </Link>
-          </div>
+
+          <section className="card p-5 sm:p-6">
+            <h2 className="text-xl font-black text-landal-900">Toevoegen aan Wallet</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              De Wallet-knoppen staan klaar voor de officiele Apple Wallet en Google Wallet koppeling. Tot die koppeling actief is, kan deze pagina direct vanuit de mail worden geopend.
+            </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <button className="btn-secondary w-full cursor-not-allowed opacity-65" disabled>
+                <CreditCard className="h-4 w-4" /> Apple Wallet volgt
+              </button>
+              <button className="btn-secondary w-full cursor-not-allowed opacity-65" disabled>
+                <Smartphone className="h-4 w-4" /> Google Wallet volgt
+              </button>
+            </div>
+          </section>
         </section>
 
-        <section className="card p-5">
-          <h2 className="text-xl font-black text-landal-900">Toevoegen aan Wallet</h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Deze pagina is klaar voor Apple Wallet en Google Wallet. Voor het echte toevoegen zijn nog officiele
-            Wallet-gegevens nodig van Apple en Google.
-          </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            <button className="btn-secondary w-full cursor-not-allowed opacity-60" disabled>
-              <CreditCard className="h-4 w-4" /> Apple Wallet volgt
-            </button>
-            <button className="btn-secondary w-full cursor-not-allowed opacity-60" disabled>
-              <Smartphone className="h-4 w-4" /> Google Wallet volgt
-            </button>
-          </div>
-          <p className="mt-4 text-xs text-slate-500">
-            Tot die koppeling actief is, kan de gast deze pagina opslaan als favoriet of de QR-code vanuit de mail openen.
-          </p>
-        </section>
+        <aside className="lg:sticky lg:top-8">
+          <section className="overflow-hidden rounded-lg border border-landal-100 bg-white shadow-wallet">
+            <div className="bg-landal-800 p-6 text-white">
+              <Brand compact />
+              <p className="mt-8 text-xs font-black uppercase tracking-wide text-gold">Digitale ledenkaart</p>
+              <h2 className="mt-2 text-3xl font-black">{fullName(guest.first_name, guest.last_name)}</h2>
+              <p className="mt-1 text-sm text-white/75">Parkbad Hotel Arcen Members</p>
+            </div>
+            <div className="p-5">
+              <QrCard url={progressUrl} label="Scan voor voortgang" guestNumber={guest.guest_number} showUrl={false} />
+              <p className="mt-4 text-center text-xs leading-5 text-slate-500">
+                Toon deze QR-code bij de receptie. De code voegt zelf geen verblijf toe.
+              </p>
+              <Link href={progressUrl} className="btn-primary mt-5 w-full">
+                Voortgang bekijken
+              </Link>
+            </div>
+          </section>
+        </aside>
       </div>
     </main>
   );
