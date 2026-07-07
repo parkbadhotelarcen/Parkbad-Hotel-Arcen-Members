@@ -3,9 +3,12 @@ import { headers } from "next/headers";
 import { CreditCard, QrCode, ScanLine, Smartphone } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { QrCard } from "@/components/qr-card";
+import { Progress } from "@/components/ui";
+import { getReferenceData } from "@/lib/actions";
 import { createAdminClient } from "@/lib/supabase/server";
 import { fullName } from "@/lib/loyalty";
 import { getPublicBaseUrl, guestUrl } from "@/lib/urls";
+import type { Guest } from "@/lib/types";
 
 export default async function WalletPassPage({ params }: { params: Promise<{ public_token: string }> }) {
   const { public_token } = await params;
@@ -29,6 +32,7 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
 
   const baseUrl = getPublicBaseUrl(await headers());
   const progressUrl = guestUrl(guest.public_token, baseUrl);
+  const refs = await getReferenceData();
 
   return (
     <main className="wellness-surface min-h-screen px-4 pb-24 pt-6 sm:py-10">
@@ -88,6 +92,19 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
               <Link href={progressUrl} aria-label="Voortgang bekijken">
                 <QrCard url={progressUrl} label="Tik voor voortgang" guestNumber={guest.guest_number} showUrl={false} />
               </Link>
+              <div className="mt-5 rounded-lg border border-landal-100 bg-mist p-4">
+                <Progress guest={guest as Guest} levels={refs.levels} rewards={refs.rewards} />
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="rounded-lg border border-landal-100 bg-white p-3 text-center">
+                  <div className="text-2xl font-black text-landal-800">{guest.total_visits}</div>
+                  <div className="text-xs font-semibold text-slate-500">Bezoeken</div>
+                </div>
+                <div className="rounded-lg border border-landal-100 bg-white p-3 text-center">
+                  <div className="text-lg font-black text-landal-800">{guest.current_level}</div>
+                  <div className="text-xs font-semibold text-slate-500">Level</div>
+                </div>
+              </div>
               <p className="mt-4 text-center text-xs leading-5 text-slate-500">
                 Tik op de QR-code om uw voortgang te openen. Toon dezelfde QR-code bij de receptie.
               </p>
