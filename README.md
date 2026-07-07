@@ -57,6 +57,7 @@ De app maakt automatisch een Supabase Auth-user en een `employees` record aan.
 - Receptie kopieert de activatielink uit het gastprofiel en stuurt die handmatig.
 - Gast activeert via `/activate/[activation_token]` met privacy-akkoord.
 - Actieve gast ziet `/guest/[public_token]`.
+- Gast kan ook via `/member` met gastnummer + controlecode de eigen voortgang openen.
 - Dezelfde QR-code opent voor ingelogde medewerkers automatisch `/guests/[id]`.
 - Bezoeken worden alleen na medewerkerslogin geregistreerd.
 - Bij een beloningsmijlpaal toont het profiel een melding en kan receptie de beloning uitgeven.
