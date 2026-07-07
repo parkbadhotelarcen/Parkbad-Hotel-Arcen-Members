@@ -4,7 +4,7 @@ import { Gift, Plus, Trash2 } from "lucide-react";
 import { requireEmployee } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/server";
 import { addVisit, deleteGuest, endParticipation, getReferenceData, issueReward, resendInvitation, updateGuest } from "@/lib/actions";
-import { activationUrl, getPublicBaseUrl, guestUrl } from "@/lib/urls";
+import { activationUrl, getPublicBaseUrl, guestUrl, walletUrl } from "@/lib/urls";
 import { fullName, nextReward, toDateLabel } from "@/lib/loyalty";
 import { QrCard } from "@/components/qr-card";
 import { Progress, Shell, StatusLabel } from "@/components/ui";
@@ -26,6 +26,7 @@ export default async function GuestDetailPage({ params, searchParams }: { params
   const next = nextReward(refs.rewards, guest.total_visits);
   const baseUrl = getPublicBaseUrl(await headers());
   const guestPage = guestUrl(guest.public_token, baseUrl);
+  const walletPage = walletUrl(guest.public_token, baseUrl);
   const invite = activationUrl(guest.activation_token, baseUrl);
   return (
     <Shell employee={employee}>
@@ -106,7 +107,19 @@ export default async function GuestDetailPage({ params, searchParams }: { params
           </section>
         </div>
         <aside className="space-y-6">
-          {guest.public_token && <QrCard url={guestPage} label="Persoonlijke QR-code" />}
+          {guest.public_token && <QrCard url={guestPage} label="Persoonlijke QR-code" guestNumber={guest.guest_number} />}
+          {guest.public_token && (
+            <div className="card p-5">
+              <h2 className="text-lg font-black text-landal-900">Wallet-link voor mail</h2>
+              <p className="mt-2 text-sm text-slate-600">
+                Stuur deze link naar de gast. Op deze pagina staat de QR-code met gastnummer en kan later Apple Wallet of Google Wallet worden toegevoegd.
+              </p>
+              <p className="mt-3 break-all rounded-lg bg-landal-50 p-3 text-xs text-landal-800">{walletPage}</p>
+              <div className="mt-3 rounded-lg border border-landal-100 bg-white p-3 text-xs text-slate-600">
+                Beste {guest.first_name}, open uw digitale ledenkaart via deze link: {walletPage}
+              </div>
+            </div>
+          )}
           {guest.status === "concept" && (
             <div className="card p-5">
               <h2 className="text-lg font-black text-landal-900">Activatielink</h2>
