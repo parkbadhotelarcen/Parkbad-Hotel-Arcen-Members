@@ -20,3 +20,7 @@ export function activationUrl(token: string | null, baseUrl = getPublicBaseUrl()
 export function guestUrl(token: string | null, baseUrl = getPublicBaseUrl()) {
   return token ? `${baseUrl}/guest/${token}` : "";
 }
+
+export function walletUrl(token: string | null, baseUrl = getPublicBaseUrl()) {
+  return token ? `${baseUrl}/wallet/${token}` : "";
+}
