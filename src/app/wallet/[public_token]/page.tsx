@@ -46,7 +46,7 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
             </div>
             <div className="p-5">
               <Link href={progressUrl} aria-label="Voortgang bekijken">
-                <QrCard url={progressUrl} label="Tik voor voortgang" guestNumber={guest.guest_number} showUrl={false} />
+                <QrCard url={progressUrl} label="QR-code ledenkaart" guestNumber={guest.guest_number} showUrl={false} showLabel={false} />
               </Link>
               <div className="mt-5 rounded-lg border border-landal-100 bg-mist p-4">
                 <Progress guest={guest as Guest} levels={refs.levels} rewards={refs.rewards} />
@@ -61,9 +61,6 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
                   <div className="text-xs font-semibold text-slate-500">Level</div>
                 </div>
               </div>
-              <p className="mt-4 text-center text-xs leading-5 text-slate-500">
-                Tik op de QR-code om uw voortgang te openen. Toon dezelfde QR-code bij de receptie.
-              </p>
             </div>
           </section>
         </aside>
