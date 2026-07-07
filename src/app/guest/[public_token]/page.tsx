@@ -17,7 +17,7 @@ export default async function PublicGuestPage({ params }: { params: Promise<{ pu
   const employee = await getEmployee();
   if (employee && guest) redirect(`/guests/${guest.id}`);
   if (!guest) {
-    return <main className="grid min-h-screen place-items-center bg-cream p-4"><div className="card max-w-md p-6">Deze ledenpagina is niet actief.</div></main>;
+    return <main className="wellness-surface grid min-h-screen place-items-center p-4"><div className="card max-w-md p-6">Deze ledenpagina is niet actief.</div></main>;
   }
   const [{ data: visits }, { data: badges }, refs] = await Promise.all([
     supabase.from("visits").select("*").eq("guest_id", guest.id).order("visit_date", { ascending: false }).limit(1),
@@ -28,20 +28,24 @@ export default async function PublicGuestPage({ params }: { params: Promise<{ pu
   const latest = ((visits || [])[0] || null) as Visit | null;
   const walletPage = walletUrl(guest.public_token, getPublicBaseUrl(await headers()));
   return (
-    <main className="min-h-screen bg-cream pb-20">
-      <header className="bg-white px-5 py-4 shadow-sm">
+    <main className="wellness-surface min-h-screen pb-20">
+      <header className="border-b border-landal-100/80 bg-white/90 px-5 py-4 shadow-sm backdrop-blur">
         <div className="mx-auto flex max-w-4xl items-center justify-between">
           <Brand compact />
           <div className="text-right text-xs font-bold uppercase tracking-[0.2em] text-landal-700">Members Club</div>
         </div>
       </header>
-      <section className="bg-landal-800 px-5 py-10 text-white">
+      <section className="px-5 py-10 text-landal-900">
         <div className="mx-auto max-w-4xl">
-          <p className="font-serif text-3xl italic">Welkom terug,</p>
-          <h1 className="text-5xl font-black">{guest.first_name}!</h1>
+          <p className="text-sm font-black uppercase tracking-wide text-landal-600">Welkom terug</p>
+          <h1 className="mt-2 text-5xl font-black">{guest.first_name}</h1>
+          <p className="mt-3 max-w-2xl text-slate-600">Hier ziet u uw level, bezoeken en volgende beloning. Bij aankomst hoeft u alleen uw digitale ledenkaart te tonen.</p>
+          <Link href={walletPage} className="btn-primary mt-6 w-full sm:w-auto">
+            Digitale ledenkaart openen
+          </Link>
         </div>
       </section>
-      <div className="mx-auto -mt-6 max-w-4xl space-y-5 px-5">
+      <div className="mx-auto max-w-4xl space-y-5 px-5">
         <section className="card p-6">
           <Progress guest={guest as Guest} levels={refs.levels} rewards={refs.rewards} />
           <div className="mt-6 grid grid-cols-2 gap-4 border-t border-landal-100 pt-5">
