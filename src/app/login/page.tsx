@@ -26,6 +26,9 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         <Link href="/setup" className="mt-4 block text-center text-sm font-semibold text-landal-700 hover:text-landal-900">
           Eerste admin aanmaken
         </Link>
+        <Link href="/member" className="mt-3 block text-center text-sm font-semibold text-landal-700 hover:text-landal-900">
+          Gast voortgang bekijken
+        </Link>
       </div>
     </main>
   );
