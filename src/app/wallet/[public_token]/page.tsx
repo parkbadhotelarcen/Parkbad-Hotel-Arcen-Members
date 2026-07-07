@@ -108,17 +108,9 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
               <p className="mt-4 text-center text-xs leading-5 text-slate-500">
                 Tik op de QR-code om uw voortgang te openen. Toon dezelfde QR-code bij de receptie.
               </p>
-              <Link href={progressUrl} className="btn-primary mt-5 w-full">
-                Voortgang bekijken
-              </Link>
             </div>
           </section>
         </aside>
-      </div>
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-landal-100 bg-white/95 p-3 shadow-card backdrop-blur lg:hidden">
-        <Link href={progressUrl} className="btn-primary w-full">
-          Voortgang bekijken
-        </Link>
       </div>
     </main>
   );
