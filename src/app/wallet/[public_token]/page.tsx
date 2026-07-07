@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { CreditCard, QrCode, ScanLine, Smartphone } from "lucide-react";
+import { CreditCard, QrCode, ScanLine } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { QrCard } from "@/components/qr-card";
 import { Progress } from "@/components/ui";
@@ -32,8 +32,6 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
 
   const baseUrl = getPublicBaseUrl(await headers());
   const progressUrl = guestUrl(guest.public_token, baseUrl);
-  const appleWalletUrl = `/api/wallet/apple/${guest.public_token}`;
-  const googleWalletUrl = `/api/wallet/google/${guest.public_token}`;
   const refs = await getReferenceData();
 
   return (
@@ -65,21 +63,6 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
               </div>
             </div>
           </div>
-
-          <section className="card p-5 sm:p-6">
-            <h2 className="text-xl font-black text-landal-900">Toevoegen aan Wallet</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              De Wallet-knoppen staan klaar voor de officiele Apple Wallet en Google Wallet koppeling. Tot die koppeling actief is, kan deze pagina direct vanuit de mail worden geopend.
-            </p>
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              <Link href={appleWalletUrl} className="btn-secondary w-full">
-                <CreditCard className="h-4 w-4" /> Apple Wallet
-              </Link>
-              <Link href={googleWalletUrl} className="btn-secondary w-full">
-                <Smartphone className="h-4 w-4" /> Google Wallet
-              </Link>
-            </div>
-          </section>
         </section>
 
         <aside className="order-1 lg:sticky lg:top-8 lg:order-2">
