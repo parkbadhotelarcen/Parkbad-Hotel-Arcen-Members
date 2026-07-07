@@ -31,9 +31,9 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
   const progressUrl = guestUrl(guest.public_token, baseUrl);
 
   return (
-    <main className="wellness-surface min-h-screen px-4 py-6 sm:py-10">
+    <main className="wellness-surface min-h-screen px-4 pb-24 pt-6 sm:py-10">
       <div className="mx-auto grid max-w-5xl items-start gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <section className="space-y-6">
+        <section className="order-2 space-y-6 lg:order-1">
           <div className="card p-6 sm:p-8">
             <Brand />
             <p className="mt-10 text-xs font-black uppercase tracking-wide text-landal-600">Landal Vaste Gasten Club</p>
@@ -76,7 +76,7 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
           </section>
         </section>
 
-        <aside className="lg:sticky lg:top-8">
+        <aside className="order-1 lg:sticky lg:top-8 lg:order-2">
           <section className="overflow-hidden rounded-lg border border-landal-100 bg-white shadow-wallet">
             <div className="bg-landal-800 p-6 text-white">
               <Brand compact />
@@ -85,9 +85,11 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
               <p className="mt-1 text-sm text-white/75">Parkbad Hotel Arcen Members</p>
             </div>
             <div className="p-5">
-              <QrCard url={progressUrl} label="Scan voor voortgang" guestNumber={guest.guest_number} showUrl={false} />
+              <Link href={progressUrl} aria-label="Voortgang bekijken">
+                <QrCard url={progressUrl} label="Tik voor voortgang" guestNumber={guest.guest_number} showUrl={false} />
+              </Link>
               <p className="mt-4 text-center text-xs leading-5 text-slate-500">
-                Toon deze QR-code bij de receptie. De code voegt zelf geen verblijf toe.
+                Tik op de QR-code om uw voortgang te openen. Toon dezelfde QR-code bij de receptie.
               </p>
               <Link href={progressUrl} className="btn-primary mt-5 w-full">
                 Voortgang bekijken
@@ -95,6 +97,11 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
             </div>
           </section>
         </aside>
+      </div>
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-landal-100 bg-white/95 p-3 shadow-card backdrop-blur lg:hidden">
+        <Link href={progressUrl} className="btn-primary w-full">
+          Voortgang bekijken
+        </Link>
       </div>
     </main>
   );
