@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { headers } from "next/headers";
-import { CreditCard, QrCode, ScanLine } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { QrCard } from "@/components/qr-card";
 import { Progress } from "@/components/ui";
@@ -35,37 +34,9 @@ export default async function WalletPassPage({ params }: { params: Promise<{ pub
   const refs = await getReferenceData();
 
   return (
-    <main className="wellness-surface min-h-screen px-4 pb-24 pt-6 sm:py-10">
-      <div className="mx-auto grid max-w-5xl items-start gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
-        <section className="order-2 space-y-6 lg:order-1">
-          <div className="card p-6 sm:p-8">
-            <Brand />
-            <p className="mt-10 text-xs font-black uppercase tracking-wide text-landal-600">Landal Vaste Gasten Club</p>
-            <h1 className="mt-3 text-4xl font-black leading-tight text-landal-900 sm:text-5xl">Uw digitale ledenkaart</h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
-              Open deze kaart bij aankomst. De receptie scant de QR-code, registreert uw verblijf en uw voortgang wordt automatisch bijgewerkt.
-            </p>
-            <div className="mt-6 grid gap-3 sm:grid-cols-3">
-              <div className="rounded-lg border border-landal-100 bg-mist p-4">
-                <QrCode className="h-5 w-5 text-landal-600" />
-                <div className="mt-3 text-sm font-black text-landal-900">Kaart openen</div>
-                <div className="mt-1 text-xs text-slate-600">Vanuit Wallet of deze mail.</div>
-              </div>
-              <div className="rounded-lg border border-landal-100 bg-mist p-4">
-                <ScanLine className="h-5 w-5 text-landal-600" />
-                <div className="mt-3 text-sm font-black text-landal-900">QR scannen</div>
-                <div className="mt-1 text-xs text-slate-600">Alleen door de receptie.</div>
-              </div>
-              <div className="rounded-lg border border-landal-100 bg-mist p-4">
-                <CreditCard className="h-5 w-5 text-landal-600" />
-                <div className="mt-3 text-sm font-black text-landal-900">Voortgang bijwerken</div>
-                <div className="mt-1 text-xs text-slate-600">Automatisch na registratie.</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <aside className="order-1 lg:sticky lg:top-8 lg:order-2">
+    <main className="wellness-surface min-h-screen px-4 py-6 sm:py-10">
+      <div className="mx-auto max-w-md">
+        <aside>
           <section className="overflow-hidden rounded-lg border border-landal-100 bg-white shadow-wallet">
             <div className="bg-landal-800 p-6 text-white">
               <Brand compact />
