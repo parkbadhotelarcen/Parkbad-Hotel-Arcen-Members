@@ -56,15 +56,29 @@ Rollen zijn `reception`, `manager` en `admin`.
 
 ## Wallet-flow
 
-De MVP heeft een wallet-klare ledenkaart via `/wallet/[public_token]`. Deze pagina is bedoeld voor de mail naar de gast. De gast ziet daar de QR-code, het gastnummer en een knop naar de eigen voortgang.
+De MVP heeft een wallet-klare ledenkaart via `/wallet/[public_token]`. Deze pagina is bedoeld voor de mail naar de gast. De gast ziet daar de QR-code, het gastnummer en de actuele voortgang.
 
-Echte Apple Wallet en Google Wallet knoppen vereisen later extra setup:
+Google Wallet is technisch voorbereid via `/api/wallet/google/[public_token]`. Zodra de Google Wallet instellingen in Vercel staan, stuurt de knop door naar de officiele Google Wallet save-link.
+
+Benodigde Google Wallet instellingen:
+
+- `GOOGLE_WALLET_ISSUER_ID`
+- `GOOGLE_WALLET_CLASS_ID`
+- `GOOGLE_WALLET_SERVICE_ACCOUNT_EMAIL`
+- `GOOGLE_WALLET_PRIVATE_KEY`
+
+Apple Wallet is voorbereid via `/api/wallet/apple/[public_token]`, maar het echte `.pkpass` bestand vereist nog een Apple Pass signing stap met certificaten.
+
+Benodigde Apple Wallet instellingen:
 
 - Apple Developer account met Wallet Pass certificate.
-- Google Wallet issuer account.
-- Server-side ondertekening/generatie van de wallet pass.
+- `APPLE_WALLET_PASS_TYPE_ID`
+- `APPLE_WALLET_TEAM_ID`
+- `APPLE_WALLET_CERTIFICATE_BASE64`
+- `APPLE_WALLET_PRIVATE_KEY_BASE64`
+- `APPLE_WALLET_WWDR_CERTIFICATE_BASE64`
 
-De knoppen staan daarom alvast op de juiste plek, maar zijn nog niet actief totdat die officiele gegevens beschikbaar zijn.
+Zonder deze gegevens tonen de Wallet-routes een nette setupmelding.
 
 ## Deploy naar Vercel
 
