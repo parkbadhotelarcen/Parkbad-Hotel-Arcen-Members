@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Brand } from "@/components/brand";
 import { Progress } from "@/components/ui";
@@ -6,6 +7,7 @@ import { getEmployee } from "@/lib/auth";
 import { getReferenceData } from "@/lib/actions";
 import { createAdminClient } from "@/lib/supabase/server";
 import { fullName, toDateLabel } from "@/lib/loyalty";
+import { getPublicBaseUrl, walletUrl } from "@/lib/urls";
 import type { Badge, Guest, Visit } from "@/lib/types";
 
 export default async function PublicGuestPage({ params }: { params: Promise<{ public_token: string }> }) {
@@ -24,6 +26,7 @@ export default async function PublicGuestPage({ params }: { params: Promise<{ pu
   ]);
   const awarded = (badges || []).map((item) => item.badges).filter(Boolean) as unknown as Badge[];
   const latest = ((visits || [])[0] || null) as Visit | null;
+  const walletPage = walletUrl(guest.public_token, getPublicBaseUrl(await headers()));
   return (
     <main className="min-h-screen bg-cream pb-20">
       <header className="bg-white px-5 py-4 shadow-sm">
@@ -50,6 +53,9 @@ export default async function PublicGuestPage({ params }: { params: Promise<{ pu
           <h2 className="text-xl font-black text-landal-900">Uw gegevens</h2>
           <p className="mt-2 text-slate-700">{fullName(guest.first_name, guest.last_name)} · {guest.guest_number}</p>
           <p className="mt-1 text-sm text-slate-600">Laatste verblijf: {latest ? toDateLabel(latest.visit_date) : "nog niet geregistreerd"}</p>
+          <Link href={walletPage} className="btn-secondary mt-4 w-full sm:w-auto">
+            Digitale ledenkaart openen
+          </Link>
         </section>
         <section className="card p-6">
           <h2 className="text-xl font-black text-landal-900">Uw badges</h2>
