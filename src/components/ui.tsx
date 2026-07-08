@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Award, BarChart3, Gift, Home, LogOut, QrCode, Search, Settings, Trash2, UserCheck, UserCog, Users } from "lucide-react";
+import { Gift, Home, LogOut, Settings, Users } from "lucide-react";
 import { signOut } from "@/lib/actions";
 import { Brand } from "@/components/brand";
 import type { Employee, Guest, Level, Reward } from "@/lib/types";
@@ -8,15 +8,8 @@ import { nextReward, progressToReward } from "@/lib/loyalty";
 const nav = [
   ["/dashboard", Home, "Dashboard"],
   ["/guests", Users, "Gasten"],
-  ["/guests/new", Award, "Nieuwe gast"],
-  ["/scan", QrCode, "QR scannen"],
   ["/rewards", Gift, "Beloningen"],
-  ["/stats", BarChart3, "Statistieken"],
-  ["/activations", UserCheck, "Activaties"],
-  ["/trash", Trash2, "Prullenbak"],
   ["/settings", Settings, "Instellingen"],
-  ["/employees", UserCog, "Medewerkers"],
-  ["/logs", Search, "Logs"],
 ] as const;
 
 export function Shell({ employee, children }: { employee: Employee; children: React.ReactNode }) {
@@ -49,8 +42,8 @@ export function Shell({ employee, children }: { employee: Employee; children: Re
         </header>
         <div className="p-4 lg:p-8">{children}</div>
       </main>
-      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-5 border-t border-landal-100 bg-white/95 p-2 shadow-card backdrop-blur lg:hidden">
-        {nav.slice(0, 5).map(([href, Icon, label]) => (
+      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-4 border-t border-landal-100 bg-white/95 p-2 shadow-card backdrop-blur lg:hidden">
+        {nav.map(([href, Icon, label]) => (
           <Link key={href} href={href} className="flex flex-col items-center gap-1 rounded-lg py-2 text-[11px] font-semibold text-landal-800">
             <Icon className="h-5 w-5" />
             {label.split(" ")[0]}
@@ -92,7 +85,7 @@ export function Progress({ guest, levels, rewards }: { guest: Guest; levels: Lev
           <div className="text-xs font-bold uppercase tracking-wide text-landal-700">Uw level</div>
           <div className="text-2xl font-black text-landal-900">{guest.current_level} Member</div>
         </div>
-        <div className="rounded-lg bg-landal-700 px-4 py-3 text-center text-sm font-black text-white">{level?.icon || "★"}</div>
+        <div className="rounded-lg bg-landal-700 px-4 py-3 text-center text-sm font-black text-white">{level?.icon || "*"}</div>
       </div>
       <div>
         <div className="mb-2 flex justify-between text-sm font-semibold text-landal-800">
