@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-label="Parkbad Hotel Arcen aan het water">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b5552"/>
+      <stop offset="0.45" stop-color="#4f8f93"/>
+      <stop offset="1" stop-color="#f3c777"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a5a57"/>
+      <stop offset="1" stop-color="#0b3837"/>
+    </linearGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#003836" stop-opacity="0.92"/>
+      <stop offset="0.5" stop-color="#003836" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#003836" stop-opacity="0.12"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+  </defs>
+  <rect width="900" height="420" fill="url(#sky)"/>
+  <circle cx="515" cy="92" r="48" fill="#ffe3a3" opacity="0.78" filter="url(#soft)"/>
+  <path d="M0 208 C110 158 185 170 275 204 C365 239 445 178 545 190 C660 205 755 155 900 196 L900 420 L0 420 Z" fill="#154d42"/>
+  <path d="M0 234 C124 203 213 210 322 239 C430 269 525 218 642 224 C755 231 824 210 900 232 L900 420 L0 420 Z" fill="#0d3f37" opacity="0.88"/>
+  <rect y="238" width="900" height="182" fill="url(#water)"/>
+  <path d="M40 276 C180 260 287 291 432 276 C591 260 714 292 860 276" fill="none" stroke="#d2f1ef" stroke-opacity="0.2" stroke-width="4"/>
+  <path d="M80 324 C210 306 330 338 475 320 C610 303 725 335 845 318" fill="none" stroke="#fbfaf5" stroke-opacity="0.12" stroke-width="3"/>
+  <g transform="translate(560 113)">
+    <rect x="0" y="68" width="220" height="82" rx="8" fill="#f8eee0"/>
+    <rect x="24" y="35" width="172" height="70" rx="7" fill="#fff8ef"/>
+    <path d="M18 36 L110 0 L202 36 Z" fill="#423129"/>
+    <path d="M36 68 L74 68 L74 150 L36 150 Z M96 68 L136 68 L136 150 L96 150 Z M158 68 L198 68 L198 150 L158 150 Z" fill="#e1b579"/>
+    <g fill="#0b5552">
+      <rect x="48" y="82" width="18" height="24" rx="2"/>
+      <rect x="108" y="82" width="18" height="24" rx="2"/>
+      <rect x="170" y="82" width="18" height="24" rx="2"/>
+      <rect x="48" y="118" width="18" height="24" rx="2"/>
+      <rect x="108" y="118" width="18" height="24" rx="2"/>
+      <rect x="170" y="118" width="18" height="24" rx="2"/>
+    </g>
+    <path d="M-24 151 L250 151" stroke="#f8eee0" stroke-width="10" stroke-linecap="round"/>
+  </g>
+  <g fill="#17483f" opacity="0.9">
+    <circle cx="112" cy="196" r="35"/>
+    <circle cx="163" cy="183" r="42"/>
+    <circle cx="213" cy="200" r="32"/>
+    <rect x="106" y="194" width="12" height="66"/>
+    <rect x="157" y="192" width="12" height="75"/>
+    <rect x="207" y="202" width="11" height="58"/>
+  </g>
+  <rect width="900" height="420" fill="url(#fade)"/>
+  <path d="M806 164 C831 126 854 105 877 94 C862 126 847 151 811 174 M795 209 C822 178 848 163 884 158 C860 185 833 207 795 214 M801 252 C828 231 855 223 891 231 C862 251 833 263 801 257" fill="none" stroke="#d2f1ef" stroke-opacity="0.46" stroke-width="3"/>
+</svg>
