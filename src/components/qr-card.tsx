@@ -7,16 +7,18 @@ export async function QrCard({
   guestNumber,
   showUrl = true,
   showLabel = true,
+  bare = false,
 }: {
   url: string;
   label: string;
   guestNumber?: string;
   showUrl?: boolean;
   showLabel?: boolean;
+  bare?: boolean;
 }) {
   const src = await qrDataUrl(url);
   return (
-    <div className="card p-5 text-center">
+    <div className={bare ? "text-center" : "card p-5 text-center"}>
       <div className="mx-auto w-fit rounded-lg border border-landal-100 bg-white p-3 shadow-card">
         <Image src={src} alt={label} width={232} height={232} className="rounded-md" />
       </div>
