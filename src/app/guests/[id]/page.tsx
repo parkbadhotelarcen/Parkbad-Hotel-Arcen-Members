@@ -15,7 +15,7 @@ export default async function GuestDetailPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ created?: string; reward?: string }>;
+  searchParams: Promise<{ created?: string; email?: string; reward?: string }>;
 }) {
   const employee = await requireEmployee();
   const { id } = await params;
@@ -44,7 +44,17 @@ export default async function GuestDetailPage({
       <div className="space-y-5">
         {query.created && (
           <div className="rounded-lg bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">
-            Gast toegevoegd en activatielink aangemaakt. Gebruik de activatielink hieronder om de gast uit te nodigen.
+            {query.email === "sent" ? "Gast toegevoegd en activatiemail verzonden." : "Gast toegevoegd en activatielink aangemaakt."}
+          </div>
+        )}
+        {query.email === "resent" && (
+          <div className="rounded-lg bg-emerald-50 p-4 text-sm font-semibold text-emerald-900">
+            Activatiemail opnieuw verzonden.
+          </div>
+        )}
+        {query.email === "failed" && (
+          <div className="rounded-lg bg-amber-50 p-4 text-sm font-semibold text-amber-900">
+            De gast is opgeslagen, maar de activatiemail kon niet worden verzonden. Controleer RESEND_API_KEY en EMAIL_FROM in Vercel.
           </div>
         )}
 
