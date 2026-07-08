@@ -22,9 +22,17 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 SETUP_SECRET=
+RESEND_API_KEY=
+EMAIL_FROM=
 ```
 
 Gebruik `NEXT_PUBLIC_SUPABASE_ANON_KEY` of `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` voor de publieke Supabase key. `SUPABASE_SERVICE_ROLE_KEY` blijft alleen server-side. Zet deze nooit in clientcode. `SETUP_SECRET` is optioneel maar aanbevolen voor de eerste installatie.
+
+Voor automatische activatiemails gebruikt de app Resend:
+
+- `RESEND_API_KEY`: API key uit Resend.
+- `EMAIL_FROM`: afzender, bijvoorbeeld `Parkbad Hotel Arcen <leden@jouwdomein.nl>`.
+- `NEXT_PUBLIC_APP_URL`: de publieke Vercel URL, zodat activatielinks niet naar localhost verwijzen.
 
 ## Supabase setup
 
@@ -41,9 +49,11 @@ Rollen zijn `reception`, `manager` en `admin`.
 ## Workflows
 
 - Receptie logt in via `/login`.
-- Nieuwe gast via `/guests/new`.
+- Nieuwe gast via de knop **Nieuwe gast** op Dashboard of Gasten.
 - De app maakt gastnummer, control code, public token en activation token.
-- Receptie kopieert de activatielink uit het gastprofiel en stuurt die handmatig.
+- De app verstuurt automatisch een activatiemail via Resend.
+- In het gastprofiel kan receptie de knop **Activatiemail opnieuw versturen** gebruiken.
+- Iedere verzonden activatiemail wordt gelogd in `audit_logs`.
 - Gast activeert via `/activate/[activation_token]` met privacy-akkoord.
 - Actieve gast ziet `/guest/[public_token]`.
 - Gast kan ook via `/member` met gastnummer + controlecode de eigen voortgang openen.
@@ -56,7 +66,7 @@ Rollen zijn `reception`, `manager` en `admin`.
 
 ## Wallet-flow
 
-De MVP heeft een wallet-klare ledenkaart via `/wallet/[public_token]`. Deze pagina is bedoeld voor de mail naar de gast. De gast ziet daar de QR-code, het gastnummer en de actuele voortgang.
+De MVP heeft een wallet-klare ledenkaart via `/wallet/[public_token]`. Deze pagina is bedoeld voor de mail naar de gast. De gast ziet daar de QR-code, het gastnummer en een knop naar de eigen voortgang.
 
 Google Wallet is technisch voorbereid via `/api/wallet/google/[public_token]`. Zodra de Google Wallet instellingen in Vercel staan, stuurt de knop door naar de officiele Google Wallet save-link.
 
