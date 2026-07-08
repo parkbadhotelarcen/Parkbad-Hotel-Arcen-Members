@@ -5,12 +5,76 @@ import { redirect } from "next/navigation";
 import QRCode from "qrcode";
 import { requireEmployee } from "@/lib/auth";
 import { createAdminClient, createSupabaseServerClient } from "@/lib/supabase/server";
-import { formatGuestNumber, levelForVisits, makeControlCode, makeToken } from "@/lib/loyalty";
+import { formatGuestNumber, fullName, levelForVisits, makeControlCode, makeToken } from "@/lib/loyalty";
+import { activationUrl } from "@/lib/urls";
 import type { Level, Reward } from "@/lib/types";
 
 async function logAction(employeeId: string | null, guestId: string | null, action: string, details: Record<string, unknown> = {}) {
   const supabase = createAdminClient();
   await supabase.from("audit_logs").insert({ employee_id: employeeId, guest_id: guestId, action, details });
+}
+
+async function sendActivationEmail({
+  employeeId,
+  guest,
+  token,
+  reason,
+}: {
+  employeeId: string;
+  guest: { id: string; first_name: string | null; last_name: string | null; email: string | null; guest_number: string };
+  token: string;
+  reason: "created" | "resent";
+}) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.EMAIL_FROM;
+  if (!apiKey || !from) {
+    await logAction(employeeId, guest.id, "activatiemail mislukt", { reason, error: "RESEND_API_KEY of EMAIL_FROM ontbreekt" });
+    return { ok: false, error: "E-mail is nog niet ingesteld in Vercel." };
+  }
+
+  if (!guest.email) {
+    await logAction(employeeId, guest.id, "activatiemail mislukt", { reason, error: "Gast heeft geen e-mailadres" });
+    return { ok: false, error: "Gast heeft geen e-mailadres." };
+  }
+
+  const link = activationUrl(token);
+  const name = fullName(guest.first_name, guest.last_name);
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from,
+      to: guest.email,
+      subject: "Activeer uw Parkbad Hotel Arcen Members ledenkaart",
+      text: `Beste ${name},\n\nWelkom bij Parkbad Hotel Arcen Members.\n\nActiveer uw digitale ledenkaart via deze link:\n${link}\n\nNa activatie kunt u uw voortgang, level en beloningen bekijken.\n\nMet vriendelijke groet,\nParkbad Hotel Arcen`,
+      html: `
+        <div style="font-family:Arial,sans-serif;background:#f4fbfa;padding:28px;color:#103331">
+          <div style="max-width:560px;margin:0 auto;background:#ffffff;border:1px solid #d2f1ef;border-radius:16px;padding:28px">
+            <h1 style="margin:0;color:#004c49;font-size:28px">Uw digitale ledenkaart</h1>
+            <p style="font-size:16px;line-height:1.6">Beste ${name},</p>
+            <p style="font-size:16px;line-height:1.6">Welkom bij Parkbad Hotel Arcen Members. Activeer uw deelname om uw digitale ledenkaart, voortgang en beloningen te bekijken.</p>
+            <p style="margin:28px 0">
+              <a href="${link}" style="display:inline-block;background:#007a78;color:#ffffff;text-decoration:none;font-weight:700;border-radius:10px;padding:14px 20px">Account activeren</a>
+            </p>
+            <p style="font-size:13px;line-height:1.6;color:#52646f">Werkt de knop niet? Kopieer deze link:<br><a href="${link}" style="color:#007a78">${link}</a></p>
+            <p style="font-size:13px;color:#52646f">Gastnummer: ${guest.guest_number}</p>
+          </div>
+        </div>
+      `,
+    }),
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    await logAction(employeeId, guest.id, "activatiemail mislukt", { reason, status: response.status, error: result });
+    return { ok: false, error: "Resend kon de e-mail niet versturen." };
+  }
+
+  await logAction(employeeId, guest.id, "activatiemail verzonden", { reason, to: guest.email, resend_id: result.id, activation_url: link });
+  return { ok: true };
 }
 
 export async function signIn(formData: FormData) {
@@ -60,7 +124,8 @@ export async function createGuest(formData: FormData) {
     await logAction(employee.id, data.id, "verblijf toegevoegd", { reservation_number: reservationNumber || null, room_number: roomNumber || null });
   }
   await logAction(employee.id, data.id, "gast aangemaakt", { guest_number: guestNumber });
-  redirect(`/guests/${data.id}?created=1`);
+  const email = await sendActivationEmail({ employeeId: employee.id, guest: data, token: data.activation_token, reason: "created" });
+  redirect(`/guests/${data.id}?created=1&email=${email.ok ? "sent" : "failed"}`);
 }
 
 export async function activateGuest(token: string, formData: FormData) {
@@ -77,17 +142,25 @@ export async function activateGuest(token: string, formData: FormData) {
     .single();
   if (error || !data) redirect(`/activate/${token}?error=${encodeURIComponent("Activatielink is ongeldig")}`);
   await logAction(null, data.id, "gast geactiveerd", {});
-  redirect(`/guest/${data.public_token}`);
+  redirect(`/wallet/${data.public_token}`);
 }
 
 export async function resendInvitation(guestId: string) {
   const employee = await requireEmployee();
   const token = makeToken();
   const supabase = createAdminClient();
-  const { error } = await supabase.from("guests").update({ activation_token: token }).eq("id", guestId).eq("status", "concept");
+  const { data, error } = await supabase
+    .from("guests")
+    .update({ activation_token: token })
+    .eq("id", guestId)
+    .eq("status", "concept")
+    .select("id,first_name,last_name,email,guest_number")
+    .single();
   if (error) throw new Error(error.message);
-  await logAction(employee.id, guestId, "uitnodiging opnieuw verstuurd", { mode: "copy-link" });
+  await logAction(employee.id, guestId, "uitnodiging opnieuw verstuurd", { mode: "resend" });
+  const email = await sendActivationEmail({ employeeId: employee.id, guest: data, token, reason: "resent" });
   revalidatePath(`/guests/${guestId}`);
+  redirect(`/guests/${guestId}?email=${email.ok ? "resent" : "failed"}`);
 }
 
 export async function addVisit(guestId: string, formData: FormData) {
@@ -144,7 +217,7 @@ export async function endParticipation(guestId: string) {
   const employee = await requireEmployee();
   const supabase = createAdminClient();
   await supabase.from("guests").update({ status: "ended" }).eq("id", guestId);
-  await logAction(employee.id, guestId, "deelname beëindigd", {});
+  await logAction(employee.id, guestId, "deelname beeindigd", {});
   revalidatePath(`/guests/${guestId}`);
 }
 
@@ -207,6 +280,46 @@ export async function updateSetting(key: string, formData: FormData) {
   const supabase = createAdminClient();
   await supabase.from("settings").upsert({ key, value: String(formData.get("value") || "") }, { onConflict: "key" });
   revalidatePath("/settings");
+}
+
+export async function createEmployee(formData: FormData) {
+  const currentEmployee = await requireEmployee(["manager", "admin"]);
+  const supabase = createAdminClient();
+  const email = String(formData.get("email") || "").trim().toLowerCase();
+  const password = String(formData.get("password") || "");
+  const name = String(formData.get("name") || "").trim();
+  const role = String(formData.get("role") || "reception");
+  if (!email || !password || !name) throw new Error("Naam, e-mail en wachtwoord zijn verplicht.");
+  if (!["reception", "manager", "admin"].includes(role)) throw new Error("Ongeldige rol.");
+
+  const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { name },
+  });
+  if (authError) throw new Error(authError.message);
+  if (!authData.user) throw new Error("Supabase heeft geen gebruiker aangemaakt.");
+
+  const { error: employeeError } = await supabase.from("employees").insert({
+    auth_user_id: authData.user.id,
+    name,
+    email,
+    role,
+    active: true,
+  });
+  if (employeeError) throw new Error(employeeError.message);
+
+  await logAction(currentEmployee.id, null, "medewerker aangemaakt", { email, role });
+  revalidatePath("/employees");
+}
+
+export async function updateEmployeeStatus(employeeId: string, active: boolean) {
+  const currentEmployee = await requireEmployee(["manager", "admin"]);
+  const supabase = createAdminClient();
+  await supabase.from("employees").update({ active }).eq("id", employeeId);
+  await logAction(currentEmployee.id, null, active ? "medewerker geactiveerd" : "medewerker gedeactiveerd", { employee_id: employeeId });
+  revalidatePath("/employees");
 }
 
 export async function qrDataUrl(url: string) {
